@@ -76,16 +76,19 @@ describe('App', () => {
     ['/memberships', 'Memberships & renewals', /Lifecycle ledger/i],
     ['/attendance', 'Attendance', /Today’s check-ins/i],
     ['/reports', 'Reports', /Six-month demo trend/i],
-  ])('renders completed module deep link %s as an interactive demo', async (path, heading, content) => {
-    window.history.replaceState({}, '', path)
-    mockFetch(true)
-    render(<App />)
+  ])(
+    'renders completed module deep link %s as an interactive demo',
+    async (path, heading, content) => {
+      window.history.replaceState({}, '', path)
+      mockFetch(true)
+      render(<App />)
 
-    expect(await screen.findByRole('heading', { name: heading, level: 1 })).toBeVisible()
-    expect(screen.getByText(/Demo data live/i)).toBeVisible()
-    expect(screen.getByText(content)).toBeVisible()
-    expect(screen.queryByText(/not implemented yet/i)).not.toBeInTheDocument()
-  })
+      expect(await screen.findByRole('heading', { name: heading, level: 1 })).toBeVisible()
+      expect(screen.getByText(/Demo data live/i)).toBeVisible()
+      expect(screen.getByText(content)).toBeVisible()
+      expect(screen.queryByText(/not implemented yet/i)).not.toBeInTheDocument()
+    },
+  )
 
   it('shows Payments as an explicit scope exclusion without unfinished-product copy', async () => {
     window.history.replaceState({}, '', '/payments')
