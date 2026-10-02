@@ -14,14 +14,16 @@ import { registeredDemoMemberMetrics, registeredDemoMembers } from '../lib/regis
 import { moduleDefinitions } from '../lib/navigation'
 import { Badge } from '../components/ui'
 
-function databaseCopy(health: HealthState) {
+function databaseCopy(health: HealthState, publicPreview: boolean) {
+  if (publicPreview) return 'Synthetic preview dataset active'
   if (health.kind === 'loaded') return 'PostgreSQL connected'
-  if (health.kind === 'error') return 'Public preview or backend unavailable'
+  if (health.kind === 'error') return 'Backend connection unavailable'
   return 'Verifying connection'
 }
 
 export function HomePage({ user, health }: { user: AuthUser; health: HealthState }) {
   const recentDemoMembers = registeredDemoMembers.slice(-4).reverse()
+  const publicPreview = user.email === 'preview@gridstone.app'
 
   return (
     <div className="page-stack">
@@ -30,26 +32,26 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
           <p className="page-eyebrow">Gridstone workspace</p>
           <h1>The front desk, without the friction.</h1>
           <p>
-            Welcome, <strong>{user.full_name}</strong>. Phase 3D is verified and the Members
-            vertical slice is now the active product workflow.
+            Welcome, <strong>{user.full_name}</strong>. Explore the connected member, plan,
+            membership, attendance and reporting workflows using safe synthetic demo data.
           </p>
         </div>
         <Badge tone="accent">
           <Sparkles size={13} aria-hidden="true" />
-          Members slice active
+          Operational demo active
         </Badge>
       </header>
 
-      <section className="hero-grid" aria-label="Gridstone member operations overview">
+      <section className="hero-grid" aria-label="Gridstone operations overview">
         <article className="hero-panel">
           <div className="hero-panel__glow" aria-hidden="true" />
           <div className="hero-copy">
-            <p className="hero-kicker">Current product slice</p>
-            <h2>Member operations are now real.</h2>
+            <p className="hero-kicker">Connected workflows</p>
+            <h2>Core gym operations are available across the demo.</h2>
             <p>
-              The authenticated app supports member search, filtering, profiles, creation, editing,
-              activation and deactivation. The public preview carries 112 safe synthetic member
-              records so the same responsive experience can be explored without exposing real data.
+              Browse members and plans, review membership lifecycle records, inspect attendance,
+              and open reports from one consistent workspace. The public preview uses deterministic
+              synthetic records so the experience is useful without exposing real member data.
             </p>
             <Link className="text-link" to="/members">
               Open the member directory <ArrowUpRight size={16} aria-hidden="true" />
@@ -75,7 +77,7 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
         <article className="signal-panel">
           <div className="signal-panel__header">
             <div>
-              <p className="card-eyebrow">Foundation signal</p>
+              <p className="card-eyebrow">Workspace signal</p>
               <h2>System status</h2>
             </div>
             <span className={`signal-light signal-light--${health.kind}`} aria-hidden="true" />
@@ -87,7 +89,7 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
               </span>
               <span>
                 <strong>Data backbone</strong>
-                <small>{databaseCopy(health)}</small>
+                <small>{databaseCopy(health, publicPreview)}</small>
               </span>
             </div>
             <div className="signal-row">
@@ -104,22 +106,22 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
                 <ShieldCheck size={17} aria-hidden="true" />
               </span>
               <span>
-                <strong>Members API</strong>
-                <small>Authenticated, validated and paginated</small>
+                <strong>Operational workflows</strong>
+                <small>Members, plans, memberships, attendance and reports</small>
               </span>
             </div>
           </div>
         </article>
       </section>
 
-      <section className="report-grid" aria-label="Member preview summary">
+      <section className="report-grid" aria-label="Gridstone preview summary">
         <article className="data-card">
           <div className="data-card__header">
             <div>
               <p className="card-eyebrow">Registered preview</p>
               <h2>Latest synthetic members</h2>
             </div>
-            <Badge tone="success">+100 entries added</Badge>
+            <Badge tone="success">{registeredDemoMemberMetrics.total} records</Badge>
           </div>
           <div className="compact-list">
             {recentDemoMembers.map((member) => (
@@ -140,14 +142,14 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
         <article className="data-card">
           <div className="data-card__header">
             <div>
-              <p className="card-eyebrow">Delivery sequence</p>
-              <h2>What stays outside this slice</h2>
+              <p className="card-eyebrow">Operational modules</p>
+              <h2>Available across the public demo</h2>
             </div>
-            <Badge tone="neutral">Scope locked</Badge>
+            <Badge tone="accent">Interactive</Badge>
           </div>
           <div className="compact-list">
             {moduleDefinitions
-              .filter((module) => module.path !== '/members')
+              .filter((module) => module.path !== '/members' && module.path !== '/payments')
               .slice(0, 4)
               .map((module) => (
                 <div className="compact-list__row" key={module.path}>
@@ -156,8 +158,8 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
                     <small>{module.eyebrow}</small>
                   </span>
                   <span>
-                    <strong>Later</strong>
-                    <small>approved slice</small>
+                    <strong>Available</strong>
+                    <small>open from navigation</small>
                   </span>
                 </div>
               ))}
@@ -165,7 +167,7 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
         </article>
       </section>
 
-      <section className="principle-grid" aria-label="Gridstone member slice principles">
+      <section className="principle-grid" aria-label="Gridstone demo principles">
         <article className="principle-card">
           <span>
             <UsersRound size={19} aria-hidden="true" />
