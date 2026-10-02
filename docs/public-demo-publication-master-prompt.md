@@ -45,5 +45,7 @@ Before calling the task complete:
 6. verify the production deployment and final public URL;
 7. report exact commit SHA and distinguish synthetic preview from production database state.
 
+The same populated implementation must pass the authoritative repository's complete CI gate before the Vercel-connected repository is merged to production.
+
 ## Completion language
 Use PLANNED, DESIGNED, IMPLEMENTED, TESTED, COMMITTED, MERGED, DEPLOYED, VERIFIED precisely. Do not call the public preview a fully production-ready gym-management system until real CRUD workflows and the production database are deployed and verified.
