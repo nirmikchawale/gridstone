@@ -57,7 +57,7 @@ describe('App', () => {
     expect(await screen.findByText(/API \+ PostgreSQL online/i)).toBeVisible()
   })
 
-  it('shows the Members-focused Gridstone workspace for an authenticated session', async () => {
+  it('shows the connected Gridstone workspace for an authenticated session', async () => {
     mockFetch(true)
     render(<App />)
 
@@ -66,19 +66,35 @@ describe('App', () => {
     ).toBeVisible()
     expect(screen.getAllByText(/Gridstone Admin/i)).toHaveLength(2)
     expect(screen.getByRole('link', { name: /^members$/i })).toBeVisible()
-    expect(screen.getByText(/Members slice active/i)).toBeVisible()
+    expect(screen.getByText(/Operational demo active/i)).toBeVisible()
     expect(screen.getByRole('link', { name: /open the member directory/i })).toBeVisible()
+    expect(screen.queryByText(/not implemented yet/i)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /sign out/i })).toBeVisible()
   })
 
-  it('keeps later module deep links inside the approved phase boundary', async () => {
-    window.history.replaceState({}, '', '/attendance')
+  it.each([
+    ['/memberships', 'Memberships & renewals', /Lifecycle ledger/i],
+    ['/attendance', 'Attendance', /Today’s check-ins/i],
+    ['/reports', 'Reports', /Six-month demo trend/i],
+  ])('renders completed module deep link %s as an interactive demo', async (path, heading, content) => {
+    window.history.replaceState({}, '', path)
     mockFetch(true)
     render(<App />)
 
-    expect(await screen.findByRole('heading', { name: 'Attendance', level: 1 })).toBeVisible()
-    expect(screen.getByText(/Later approved product slice/i)).toBeVisible()
-    expect(screen.getByText(/Not implemented yet/i)).toBeVisible()
-    expect(screen.queryByText(/Demo data live/i)).not.toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: heading, level: 1 })).toBeVisible()
+    expect(screen.getByText(/Demo data live/i)).toBeVisible()
+    expect(screen.getByText(content)).toBeVisible()
+    expect(screen.queryByText(/not implemented yet/i)).not.toBeInTheDocument()
+  })
+
+  it('shows Payments as an explicit scope exclusion without unfinished-product copy', async () => {
+    window.history.replaceState({}, '', '/payments')
+    mockFetch(true)
+    render(<App />)
+
+    expect(await screen.findByRole('heading', { name: 'Payments', level: 1 })).toBeVisible()
+    expect(screen.getByText(/Excluded from project scope/i)).toBeVisible()
+    expect(screen.getByText(/Payments are intentionally outside this project/i)).toBeVisible()
+    expect(screen.queryByText(/not implemented yet/i)).not.toBeInTheDocument()
   })
 })
