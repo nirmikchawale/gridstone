@@ -26,10 +26,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Formatting
-        run: |
-          pnpm format
-          git diff -- src/pages/HomePage.tsx
-          git diff --exit-code
+        run: pnpm format:check
       - name: Lint
         run: pnpm lint
       - name: Typecheck
