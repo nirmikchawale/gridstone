@@ -12,6 +12,7 @@ import { HomePage } from './pages/HomePage'
 import { LaterSlicePage } from './pages/LaterSlicePage'
 import { LoginPage } from './pages/LoginPage'
 import { MemberPreviewPage } from './pages/MemberPreviewPage'
+import { ModulePage } from './pages/ModulePage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { PlanPreviewPage } from './pages/PlanPreviewPage'
 
@@ -120,9 +121,10 @@ function GridstoneApplication() {
     setAuth({ kind: 'anonymous' })
   }
 
-  const laterModules = moduleDefinitions.filter(
-    (module) => module.path !== '/members' && module.path !== '/plans',
+  const interactiveModules = moduleDefinitions.filter((module) =>
+    ['/memberships', '/attendance', '/reports'].includes(module.path),
   )
+  const paymentsModule = moduleDefinitions.find((module) => module.path === '/payments')
 
   return (
     <Routes>
@@ -140,13 +142,16 @@ function GridstoneApplication() {
         <Route path="dashboard" element={<Navigate to="/" replace />} />
         <Route path="members" element={<MemberPreviewPage />} />
         <Route path="plans" element={<PlanPreviewPage />} />
-        {laterModules.map((module) => (
+        {interactiveModules.map((module) => (
           <Route
             key={module.path}
             path={module.path.slice(1)}
-            element={<LaterSlicePage module={module} />}
+            element={<ModulePage module={module} />}
           />
         ))}
+        {paymentsModule && (
+          <Route path="payments" element={<LaterSlicePage module={paymentsModule} />} />
+        )}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
