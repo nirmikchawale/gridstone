@@ -9,9 +9,9 @@ import { Brand } from './components/Brand'
 import { Button } from './components/ui'
 import { WorkspaceShell } from './components/WorkspaceShell'
 import { HomePage } from './pages/HomePage'
+import { LaterSlicePage } from './pages/LaterSlicePage'
 import { LoginPage } from './pages/LoginPage'
-import { MembersPage } from './pages/MembersPage'
-import { ModulePage } from './pages/ModulePage'
+import { MemberPreviewPage } from './pages/MemberPreviewPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
 type AuthState =
@@ -63,7 +63,6 @@ function SessionError({ message }: { message: string }) {
 
 function GridstoneApplication() {
   useScrollTide()
-
   const publicPreview = isPublicPreviewBuild()
   const [auth, setAuth] = useState<AuthState>(
     publicPreview ? { kind: 'authenticated', user: publicPreviewUser } : { kind: 'loading' },
@@ -74,7 +73,6 @@ function GridstoneApplication() {
 
   useEffect(() => {
     if (publicPreview) return
-
     const controller = new AbortController()
 
     void getCurrentUser(controller.signal)
@@ -137,12 +135,12 @@ function GridstoneApplication() {
       >
         <Route index element={<HomePage user={auth.user} health={health} />} />
         <Route path="dashboard" element={<Navigate to="/" replace />} />
-        <Route path="members" element={<MembersPage publicPreview={publicPreview} />} />
+        <Route path="members" element={<MemberPreviewPage />} />
         {laterModules.map((module) => (
           <Route
             key={module.path}
             path={module.path.slice(1)}
-            element={<ModulePage module={module} />}
+            element={<LaterSlicePage module={module} />}
           />
         ))}
         <Route path="*" element={<NotFoundPage />} />
