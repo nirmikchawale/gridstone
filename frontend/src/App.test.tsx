@@ -57,7 +57,7 @@ describe('App', () => {
     expect(await screen.findByText(/API \+ PostgreSQL online/i)).toBeVisible()
   })
 
-  it('shows the populated Gridstone workspace for an authenticated session', async () => {
+  it('shows the Members-focused Gridstone workspace for an authenticated session', async () => {
     mockFetch(true)
     render(<App />)
 
@@ -66,19 +66,19 @@ describe('App', () => {
     ).toBeVisible()
     expect(screen.getAllByText(/Gridstone Admin/i)).toHaveLength(2)
     expect(screen.getByRole('link', { name: /^members$/i })).toBeVisible()
-    expect(screen.getByText(/Synthetic demo · 02 Oct 2026/i)).toBeVisible()
+    expect(screen.getByText(/Members slice active/i)).toBeVisible()
+    expect(screen.getByRole('link', { name: /open the member directory/i })).toBeVisible()
     expect(screen.getByRole('button', { name: /sign out/i })).toBeVisible()
   })
 
-  it('supports direct deep links to populated module surfaces', async () => {
+  it('keeps later module deep links inside the approved phase boundary', async () => {
     window.history.replaceState({}, '', '/attendance')
     mockFetch(true)
     render(<App />)
 
     expect(await screen.findByRole('heading', { name: 'Attendance', level: 1 })).toBeVisible()
-    expect(screen.getByText(/Demo data live/i)).toBeVisible()
-    expect(screen.getByRole('heading', { name: /Today’s check-ins/i })).toBeVisible()
-    expect(screen.getByText(/Aarav Mehta/i)).toBeVisible()
-    expect(screen.queryByText(/Feature slice not started/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/Later approved product slice/i)).toBeVisible()
+    expect(screen.getByText(/Not implemented yet/i)).toBeVisible()
+    expect(screen.queryByText(/Demo data live/i)).not.toBeInTheDocument()
   })
 })
