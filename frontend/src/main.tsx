@@ -6,6 +6,7 @@ import './styles/global.css'
 import './styles/demo.css'
 import './styles/theme.css'
 import './styles/preview-members.css'
+import './styles/preview-plans.css'
 
 initializeTheme()
 
