@@ -5,6 +5,7 @@ import { initializeTheme } from './lib/theme'
 import './styles/global.css'
 import './styles/demo.css'
 import './styles/theme.css'
+import './styles/preview-members.css'
 
 initializeTheme()
 
