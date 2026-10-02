@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { ModuleDefinition } from '../lib/navigation'
 import { Badge } from '../components/ui'
@@ -13,27 +13,27 @@ export function LaterSlicePage({ module }: { module: ModuleDefinition }) {
           <Icon size={28} strokeWidth={1.7} />
         </div>
         <div className="module-hero__copy">
-          <p className="page-eyebrow">Later approved product slice</p>
+          <p className="page-eyebrow">Project scope boundary</p>
           <h1>{module.title}</h1>
           <p>{module.description}</p>
         </div>
-        <Badge tone="neutral">Not implemented yet</Badge>
+        <Badge tone="neutral">Excluded from project scope</Badge>
       </header>
 
-      <section className="data-card later-slice-card" aria-labelledby="later-slice-heading">
+      <section className="data-card later-slice-card" aria-labelledby="scope-boundary-heading">
         <div className="later-slice-card__icon" aria-hidden="true">
-          <CheckCircle2 size={22} />
+          <ShieldCheck size={22} />
         </div>
         <div>
-          <p className="card-eyebrow">Phase boundary preserved</p>
-          <h2 id="later-slice-heading">Members is the current completed business slice.</h2>
+          <p className="card-eyebrow">Scope decision</p>
+          <h2 id="scope-boundary-heading">Payments are intentionally outside this project.</h2>
           <p>
-            Gridstone is being built vertically so each workflow is implemented, tested and verified
-            before the next one begins. This page is intentionally not populated with simulated CRUD
-            or operational totals.
+            Gridstone currently focuses on member records, membership plans, memberships and
+            renewals, attendance, dashboard operations and reporting. Payment collection, receipts,
+            revenue accounting and payment-provider integrations are deliberately excluded.
           </p>
-          <Link className="later-slice-link" to="/members">
-            Explore Members <ArrowRight size={16} aria-hidden="true" />
+          <Link className="later-slice-link" to="/memberships">
+            Open memberships & renewals <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </section>
