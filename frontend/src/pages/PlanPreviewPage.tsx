@@ -40,8 +40,8 @@ export function PlanPreviewPage() {
           <h1>Membership Plans</h1>
           <p>
             Explore Gridstone’s plan catalog with safe synthetic pricing and availability data. This
-            Vercel surface is read-only; administrator create, edit and availability controls live in
-            the secured FastAPI application.
+            Vercel surface is read-only; administrator create, edit and availability controls live
+            in the secured FastAPI application.
           </p>
         </div>
         <Badge tone="accent">Read-only public preview</Badge>
@@ -120,12 +120,19 @@ export function PlanPreviewPage() {
                   <th>Price</th>
                   <th>Demo members</th>
                   <th>Status</th>
-                  <th><span className="sr-only">Actions</span></th>
+                  <th>
+                    <span className="sr-only">Actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((plan) => (
-                  <tr key={plan.code} className={selected?.code === plan.code ? 'preview-plan-row--selected' : undefined}>
+                  <tr
+                    key={plan.code}
+                    className={
+                      selected?.code === plan.code ? 'preview-plan-row--selected' : undefined
+                    }
+                  >
                     <td data-label="Plan">
                       <span className="stacked-cell">
                         <strong>{plan.name}</strong>
@@ -133,7 +140,9 @@ export function PlanPreviewPage() {
                       </span>
                     </td>
                     <td data-label="Duration">{plan.duration}</td>
-                    <td data-label="Price"><strong>{formatINR(plan.price)}</strong></td>
+                    <td data-label="Price">
+                      <strong>{formatINR(plan.price)}</strong>
+                    </td>
                     <td data-label="Demo members">{plan.activeMembers}</td>
                     <td data-label="Status">
                       <Badge tone={plan.availability === 'Active' ? 'success' : 'neutral'}>
@@ -176,17 +185,31 @@ export function PlanPreviewPage() {
               </div>
               <p className="preview-plan-detail__description">{selected.description}</p>
               <dl className="preview-plan-detail__facts">
-                <div><dt>Duration</dt><dd>{selected.duration}</dd></div>
-                <div><dt>Price</dt><dd>{formatINR(selected.price)}</dd></div>
-                <div><dt>Currency</dt><dd>INR</dd></div>
-                <div><dt>Demo members</dt><dd>{selected.activeMembers}</dd></div>
+                <div>
+                  <dt>Duration</dt>
+                  <dd>{selected.duration}</dd>
+                </div>
+                <div>
+                  <dt>Price</dt>
+                  <dd>{formatINR(selected.price)}</dd>
+                </div>
+                <div>
+                  <dt>Currency</dt>
+                  <dd>INR</dd>
+                </div>
+                <div>
+                  <dt>Demo members</dt>
+                  <dd>{selected.activeMembers}</dd>
+                </div>
               </dl>
               <p className="preview-plan-detail__note">
                 Administrator mutations are intentionally unavailable in this public preview.
               </p>
             </>
           ) : (
-            <div className="data-empty" role="status">No plan selected.</div>
+            <div className="data-empty" role="status">
+              No plan selected.
+            </div>
           )}
         </aside>
       </section>
