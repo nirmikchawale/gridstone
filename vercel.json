@@ -4,6 +4,7 @@
   "installCommand": "corepack enable && cd frontend && corepack pnpm install --frozen-lockfile",
   "buildCommand": "cd frontend && corepack pnpm build",
   "outputDirectory": "frontend/dist",
+  "alias": ["gridstone-nirmikchawale1.vercel.app"],
   "rewrites": [
     { "source": "/dashboard", "destination": "/index.html" },
     { "source": "/members", "destination": "/index.html" },
