@@ -1,0 +1,91 @@
+/* Final responsive guardrails for value/copy separation. */
+
+.hero-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-copy {
+  flex: 0 0 auto;
+}
+
+.hero-metrics {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  margin-top: auto;
+  padding-top: clamp(1.75rem, 4vw, 3rem);
+}
+
+.hero-metric {
+  min-width: 0;
+}
+
+.hero-metric strong {
+  line-height: 1.1;
+}
+
+.hero-metric span {
+  overflow-wrap: anywhere;
+}
+
+.metric-card > div {
+  display: grid;
+  min-width: 0;
+  gap: 0.22rem;
+}
+
+.metric-card strong,
+.metric-card small,
+.metric-card > div > span {
+  min-width: 0;
+  margin-top: 0;
+}
+
+.metric-card strong {
+  line-height: 1.12;
+}
+
+.metric-card small,
+.metric-card > div > span {
+  overflow-wrap: anywhere;
+}
+
+.plan-price {
+  flex-wrap: wrap;
+  row-gap: 0.25rem;
+}
+
+.plan-price strong {
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.plan-price span {
+  line-height: 1.35;
+}
+
+.preview-member-metrics strong,
+.preview-plan-metrics strong {
+  line-height: 1.12;
+}
+
+.preview-member-metrics span,
+.preview-plan-metrics span {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 44rem) {
+  .hero-metrics {
+    margin-top: 0;
+    padding-top: 1.75rem;
+  }
+
+  .hero-metric {
+    grid-template-columns: minmax(2.75rem, auto) minmax(0, 1fr);
+  }
+
+  .plan-price strong {
+    font-size: clamp(1.45rem, 8vw, 1.7rem);
+  }
+}
