@@ -7,6 +7,7 @@ import './styles/demo.css'
 import './styles/theme.css'
 import './styles/preview-members.css'
 import './styles/preview-plans.css'
+import './styles/overlap-fixes.css'
 
 initializeTheme()
 
