@@ -1,0 +1,156 @@
+import { useEffect, useState } from 'react'
+import { AlertTriangle } from 'lucide-react'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { getCurrentUser, getHealth, logout, type AuthUser } from './lib/api'
+import type { HealthState } from './lib/app-state'
+import { moduleDefinitions } from './lib/navigation'
+import { useScrollTide } from './lib/useScrollTide'
+import { Brand } from './components/Brand'
+import { Button } from './components/ui'
+import { WorkspaceShell } from './components/WorkspaceShell'
+import { HomePage } from './pages/HomePage'
+import { LoginPage } from './pages/LoginPage'
+import { ModulePage } from './pages/ModulePage'
+import { NotFoundPage } from './pages/NotFoundPage'
+
+type AuthState =
+  | { kind: 'loading' }
+  | { kind: 'anonymous' }
+  | { kind: 'authenticated'; user: AuthUser }
+  | { kind: 'error'; message: string }
+
+const publicPreviewUser: AuthUser = {
+  id: '00000000-0000-0000-0000-000000000000',
+  email: 'preview@gridstone.app',
+  full_name: 'Gridstone Preview',
+  role: 'staff',
+}
+
+function isVercelPublicPreview() {
+  return window.location.hostname.endsWith('.vercel.app')
+}
+
+function BootScreen() {
+  return (
+    <main id="main-content" className="boot-screen" aria-live="polite">
+      <Brand />
+      <div className="boot-screen__signal" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <p>Opening your workspace…</p>
+    </main>
+  )
+}
+
+function SessionError({ message }: { message: string }) {
+  return (
+    <main id="main-content" className="error-screen" role="alert">
+      <span className="error-screen__icon" aria-hidden="true">
+        <AlertTriangle size={24} />
+      </span>
+      <p className="page-eyebrow">Gridstone session</p>
+      <h1>We couldn’t verify your workspace.</h1>
+      <p>{message}</p>
+      <Button type="button" onClick={() => window.location.reload()}>
+        Try again
+      </Button>
+    </main>
+  )
+}
+
+function GridstoneApplication() {
+  useScrollTide()
+
+  const publicPreview = isVercelPublicPreview()
+  const [auth, setAuth] = useState<AuthState>(
+    publicPreview ? { kind: 'authenticated', user: publicPreviewUser } : { kind: 'loading' },
+  )
+  const [health, setHealth] = useState<HealthState>(
+    publicPreview ? { kind: 'error' } : { kind: 'loading' },
+  )
+
+  useEffect(() => {
+    if (publicPreview) return
+
+    const controller = new AbortController()
+
+    void getCurrentUser(controller.signal)
+      .then((user) => setAuth(user ? { kind: 'authenticated', user } : { kind: 'anonymous' }))
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return
+        setAuth({
+          kind: 'error',
+          message: error instanceof Error ? error.message : 'Unable to verify your session',
+        })
+      })
+
+    void getHealth(controller.signal)
+      .then((data) => setHealth({ kind: 'loaded', data }))
+      .catch(() => {
+        if (!controller.signal.aborted) setHealth({ kind: 'error' })
+      })
+
+    return () => controller.abort()
+  }, [publicPreview])
+
+  if (auth.kind === 'loading') return <BootScreen />
+  if (auth.kind === 'error') return <SessionError message={auth.message} />
+
+  if (auth.kind === 'anonymous') {
+    return (
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <LoginPage
+              health={health}
+              onAuthenticated={(user) => setAuth({ kind: 'authenticated', user })}
+            />
+          }
+        />
+      </Routes>
+    )
+  }
+
+  async function handleLogout() {
+    if (publicPreview) return
+    await logout()
+    setAuth({ kind: 'anonymous' })
+  }
+
+  return (
+    <Routes>
+      <Route
+        element={
+          <WorkspaceShell
+            user={auth.user}
+            health={health}
+            onLogout={handleLogout}
+            publicPreview={publicPreview}
+          />
+        }
+      >
+        <Route index element={<HomePage user={auth.user} health={health} />} />
+        <Route path="dashboard" element={<Navigate to="/" replace />} />
+        {moduleDefinitions.map((module) => (
+          <Route
+            key={module.path}
+            path={module.path.slice(1)}
+            element={<ModulePage module={module} />}
+          />
+        ))}
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
+  )
+}
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <GridstoneApplication />
+    </BrowserRouter>
+  )
+}
