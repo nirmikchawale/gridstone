@@ -49,8 +49,8 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
             <p className="hero-kicker">Connected workflows</p>
             <h2>Core gym operations are available across the demo.</h2>
             <p>
-              Browse members and plans, review membership lifecycle records, inspect attendance,
-              and open reports from one consistent workspace. The public preview uses deterministic
+              Browse members and plans, review membership lifecycle records, inspect attendance, and
+              open reports from one consistent workspace. The public preview uses deterministic
               synthetic records so the experience is useful without exposing real member data.
             </p>
             <Link className="text-link" to="/members">
@@ -149,9 +149,7 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
           </div>
           <div className="compact-list">
             {moduleDefinitions
-              .filter(
-                (module) => module.path !== '/members' && module.path !== '/payments',
-              )
+              .filter((module) => module.path !== '/members' && module.path !== '/payments')
               .slice(0, 4)
               .map((module) => (
                 <div className="compact-list__row" key={module.path}>
