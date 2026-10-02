@@ -149,7 +149,9 @@ export function HomePage({ user, health }: { user: AuthUser; health: HealthState
           </div>
           <div className="compact-list">
             {moduleDefinitions
-              .filter((module) => module.path !== '/members' && module.path !== '/payments')
+              .filter(
+                (module) => module.path !== '/members' && module.path !== '/payments',
+              )
               .slice(0, 4)
               .map((module) => (
                 <div className="compact-list__row" key={module.path}>
