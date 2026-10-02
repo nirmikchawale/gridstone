@@ -9,8 +9,9 @@ import { Brand } from './components/Brand'
 import { Button } from './components/ui'
 import { WorkspaceShell } from './components/WorkspaceShell'
 import { HomePage } from './pages/HomePage'
+import { LaterSlicePage } from './pages/LaterSlicePage'
 import { LoginPage } from './pages/LoginPage'
-import { ModulePage } from './pages/ModulePage'
+import { MemberPreviewPage } from './pages/MemberPreviewPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
 type AuthState =
@@ -26,8 +27,8 @@ const publicPreviewUser: AuthUser = {
   role: 'staff',
 }
 
-function isVercelPublicPreview() {
-  return window.location.hostname.endsWith('.vercel.app')
+function isPublicPreviewBuild() {
+  return import.meta.env.VITE_PUBLIC_PREVIEW === 'true'
 }
 
 function BootScreen() {
@@ -62,8 +63,7 @@ function SessionError({ message }: { message: string }) {
 
 function GridstoneApplication() {
   useScrollTide()
-
-  const publicPreview = isVercelPublicPreview()
+  const publicPreview = isPublicPreviewBuild()
   const [auth, setAuth] = useState<AuthState>(
     publicPreview ? { kind: 'authenticated', user: publicPreviewUser } : { kind: 'loading' },
   )
@@ -73,7 +73,6 @@ function GridstoneApplication() {
 
   useEffect(() => {
     if (publicPreview) return
-
     const controller = new AbortController()
 
     void getCurrentUser(controller.signal)
@@ -120,6 +119,8 @@ function GridstoneApplication() {
     setAuth({ kind: 'anonymous' })
   }
 
+  const laterModules = moduleDefinitions.filter((module) => module.path !== '/members')
+
   return (
     <Routes>
       <Route
@@ -134,11 +135,12 @@ function GridstoneApplication() {
       >
         <Route index element={<HomePage user={auth.user} health={health} />} />
         <Route path="dashboard" element={<Navigate to="/" replace />} />
-        {moduleDefinitions.map((module) => (
+        <Route path="members" element={<MemberPreviewPage />} />
+        {laterModules.map((module) => (
           <Route
             key={module.path}
             path={module.path.slice(1)}
-            element={<ModulePage module={module} />}
+            element={<LaterSlicePage module={module} />}
           />
         ))}
         <Route path="*" element={<NotFoundPage />} />
