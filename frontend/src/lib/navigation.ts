@@ -79,11 +79,11 @@ export const moduleDefinitions: ModuleDefinition[] = [
     label: 'Payments',
     path: '/payments',
     icon: CreditCard,
-    eyebrow: 'Transaction record',
+    eyebrow: 'Project scope boundary',
     title: 'Payments',
     description:
-      'A staff-safe ledger for payment metadata, status, method and references without storing payment secrets.',
-    capabilities: ['Record payments', 'Method and status', 'Reference tracking', 'Payment history'],
+      'Payments, receipts, revenue accounting and payment-provider integrations are intentionally excluded from this project scope.',
+    capabilities: ['Excluded from project scope'],
   },
   {
     label: 'Reports',
@@ -92,8 +92,8 @@ export const moduleDefinitions: ModuleDefinition[] = [
     eyebrow: 'Operational insight',
     title: 'Reports',
     description:
-      'A future reporting surface for meaningful attendance, membership and revenue signals once workflows are live.',
-    capabilities: ['Date filters', 'Membership trends', 'Attendance patterns', 'Revenue summaries'],
+      'Operational reporting for attendance, memberships, expiries and member activity using the same demo records.',
+    capabilities: ['Date filters', 'Membership trends', 'Attendance patterns', 'Member summaries'],
   },
 ]
 
